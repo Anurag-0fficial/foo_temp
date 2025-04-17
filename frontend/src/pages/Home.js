@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -12,7 +12,7 @@ export default function Home() {
 
   const fetchFeaturedProducts = async () => {
     try {
-      const response = await axios.get('/api/products?featured=true');
+      const response = await api.get('/products?featured=true');
       setFeaturedProducts(response.data);
     } catch (error) {
       console.error('Error fetching featured products:', error);

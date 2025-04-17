@@ -21,7 +21,7 @@ export default function ProductDetail() {
 
   const fetchProduct = async () => {
     try {
-      const response = await axios.get(`/api/products/${id}`);
+      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
       setProduct(response.data);
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -133,7 +133,7 @@ export default function ProductDetail() {
               <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
               <div className="mt-4">
                 <ul className="list-disc pl-4 space-y-2 text-sm text-gray-600">
-                  {product.features.map((feature, index) => (
+                  {(product.features || []).map((feature, index) => (
                     <li key={index}>{feature}</li>
                   ))}
                 </ul>

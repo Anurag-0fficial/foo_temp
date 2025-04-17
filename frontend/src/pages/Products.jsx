@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 
 export default function Products() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,7 +28,7 @@ export default function Products() {
         if (filters.maxPrice) queryParams.append('maxPrice', filters.maxPrice);
         if (filters.sort) queryParams.append('sort', filters.sort);
 
-        const response = await axios.get(`/api/products?${queryParams.toString()}`);
+        const response = await api.get(`/products?${queryParams.toString()}`);
         setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -40,8 +40,8 @@ export default function Products() {
     const fetchFilters = async () => {
       try {
         const [brandsResponse, typesResponse] = await Promise.all([
-          axios.get('/api/products/brands'),
-          axios.get('/api/products/types'),
+          api.get('/products/brands'),
+          api.get('/products/types'),
         ]);
         setBrands(brandsResponse.data);
         setTypes(typesResponse.data);

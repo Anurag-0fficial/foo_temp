@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { toast } from 'react-toastify';
 
 export default function Contact() {
@@ -19,7 +19,7 @@ export default function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('/api/enquiries', formData);
+      await api.post('/enquiries', formData);
       toast.success('Message sent successfully');
       setFormData({
         name: '',

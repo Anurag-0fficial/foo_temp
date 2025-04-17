@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import { format } from 'date-fns';
 
@@ -18,7 +18,7 @@ export default function CustomerManagement() {
 
   const fetchCustomers = async () => {
     try {
-      const response = await axios.get('/api/customers');
+      const response = await api.get('/customers');
       setCustomers(response.data);
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -33,7 +33,7 @@ export default function CustomerManagement() {
     if (!note.trim()) return;
 
     try {
-      await axios.post(`/api/customers/${selectedCustomer._id}/notes`, { content: note });
+      await api.post(`/customers/${selectedCustomer._id}/notes`, { content: note });
       setCustomers(prevCustomers =>
         prevCustomers.map(customer =>
           customer._id === selectedCustomer._id
@@ -57,7 +57,7 @@ export default function CustomerManagement() {
     if (!newTag.trim()) return;
 
     try {
-      await axios.put(`/api/customers/${selectedCustomer._id}/tags`, {
+      await api.put(`/customers/${selectedCustomer._id}/tags`, {
         tags: [...selectedCustomer.tags, newTag]
       });
       setCustomers(prevCustomers =>
@@ -80,7 +80,7 @@ export default function CustomerManagement() {
 
   const handleRemoveTag = async (tagToRemove) => {
     try {
-      await axios.put(`/api/customers/${selectedCustomer._id}/tags`, {
+      await api.put(`/customers/${selectedCustomer._id}/tags`, {
         tags: selectedCustomer.tags.filter(tag => tag !== tagToRemove)
       });
       setCustomers(prevCustomers =>
@@ -102,7 +102,7 @@ export default function CustomerManagement() {
 
   const handleUpdateLastContact = async (date) => {
     try {
-      await axios.put(`/api/customers/${selectedCustomer._id}/last-contact`, { date });
+      await api.put(`/customers/${selectedCustomer._id}/last-contact`, { date });
       setCustomers(prevCustomers =>
         prevCustomers.map(customer =>
           customer._id === selectedCustomer._id

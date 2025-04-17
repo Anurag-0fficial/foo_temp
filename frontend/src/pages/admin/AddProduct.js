@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 
 export default function AddProduct() {
@@ -75,7 +75,7 @@ export default function AddProduct() {
     });
 
     try {
-      const response = await axios.post('/api/upload', formData, {
+      const response = await api.post('/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -96,7 +96,7 @@ export default function AddProduct() {
     setLoading(true);
 
     try {
-      await axios.post('/api/products', formData);
+      await api.post('/products', formData);
       toast.success('Product added successfully');
       navigate('/admin/products');
     } catch (error) {

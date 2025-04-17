@@ -18,7 +18,7 @@ const productSchema = new mongoose.Schema({
   },
   kvaRating: {
     type: Number,
-    required: true
+    required: false
   },
   specifications: {
     type: Map,
@@ -26,7 +26,7 @@ const productSchema = new mongoose.Schema({
   },
   imageURL: {
     type: String,
-    required: true
+    required: false
   },
   description: {
     type: String,

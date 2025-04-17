@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 
 export default function Dashboard() {
@@ -19,9 +19,9 @@ export default function Dashboard() {
     try {
       setLoading(true);
       const [products, customers, enquiries] = await Promise.all([
-        axios.get('/api/products'),
-        axios.get('/api/customers'),
-        axios.get('/api/enquiries')
+        api.get('/products'),
+        api.get('/customers'),
+        api.get('/enquiries')
       ]);
 
       setStats({

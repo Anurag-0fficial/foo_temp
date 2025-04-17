@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import api from '../../services/api';
 import { toast } from 'react-toastify';
 import {
   PlusIcon,
@@ -35,7 +35,7 @@ export default function ProductManagement() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/products');
+      const response = await api.get('/products');
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -58,10 +58,10 @@ export default function ProductManagement() {
       });
 
       if (editingProduct) {
-        await axios.put(`/api/products/${editingProduct._id}`, formDataToSend);
+        await api.put(`/products/${editingProduct._id}`, formDataToSend);
         toast.success('Product updated successfully');
       } else {
-        await axios.post('/api/products', formDataToSend);
+        await api.post('/products', formDataToSend);
         toast.success('Product created successfully');
       }
 
@@ -93,7 +93,7 @@ export default function ProductManagement() {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await axios.delete(`/api/products/${id}`);
+        await api.delete(`/products/${id}`);
         toast.success('Product deleted successfully');
         fetchProducts();
       } catch (error) {
