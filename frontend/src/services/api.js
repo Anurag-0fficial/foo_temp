@@ -13,6 +13,7 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
     if (token) {
+      // Ensure the token is properly formatted with 'Bearer' prefix
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -29,6 +30,7 @@ api.interceptors.response.use(
     // Handle 401 Unauthorized errors (token expired or invalid)
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('token');
+      delete api.defaults.headers.common['Authorization'];
       window.location.href = '/admin/login';
     }
     return Promise.reject(error);

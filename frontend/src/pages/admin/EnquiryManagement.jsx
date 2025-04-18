@@ -1,25 +1,38 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import api from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import { toast } from 'react-toastify';
 
 export default function EnquiryManagement() {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [enquiries, setEnquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedEnquiry, setSelectedEnquiry] = useState(null);
   const [note, setNote] = useState('');
 
   useEffect(() => {
+    if (!user || user.role !== 'admin') {
+      navigate('/admin/login');
+      return;
+    }
     fetchEnquiries();
-  }, []);
+  }, [user, navigate]);
 
   const fetchEnquiries = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('/api/enquiries');
+      const response = await api.get('/enquiries');
       setEnquiries(response.data);
     } catch (error) {
       console.error('Error fetching enquiries:', error);
-      toast.error('Failed to load enquiries');
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.');
+        navigate('/admin/login');
+      } else {
+        toast.error('Failed to load enquiries');
+      }
     } finally {
       setLoading(false);
     }
@@ -27,12 +40,17 @@ export default function EnquiryManagement() {
 
   const handleStatusChange = async (enquiryId, newStatus) => {
     try {
-      await axios.put(`/api/enquiries/${enquiryId}`, { status: newStatus });
+      await api.put(`/enquiries/${enquiryId}`, { status: newStatus });
       toast.success('Enquiry status updated successfully');
       fetchEnquiries();
     } catch (error) {
       console.error('Error updating enquiry status:', error);
-      toast.error('Failed to update enquiry status');
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.');
+        navigate('/admin/login');
+      } else {
+        toast.error('Failed to update enquiry status');
+      }
     }
   };
 
@@ -41,13 +59,18 @@ export default function EnquiryManagement() {
     if (!selectedEnquiry || !note.trim()) return;
 
     try {
-      await axios.post(`/api/enquiries/${selectedEnquiry._id}/notes`, { note });
+      await api.post(`/enquiries/${selectedEnquiry._id}/notes`, { note });
       toast.success('Note added successfully');
       setNote('');
       fetchEnquiries();
     } catch (error) {
       console.error('Error adding note:', error);
-      toast.error('Failed to add note');
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.');
+        navigate('/admin/login');
+      } else {
+        toast.error('Failed to add note');
+      }
     }
   };
 

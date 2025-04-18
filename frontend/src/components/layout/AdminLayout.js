@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -27,13 +27,26 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useEffect(() => {
+    // Only check authentication for admin routes
+    if (location.pathname.startsWith('/admin')) {
+      if (!user || user.role !== 'admin') {
+        navigate('/admin/login');
+      }
+    }
+  }, [user, navigate, location.pathname]);
+
   const handleLogout = () => {
     logout();
     navigate('/admin/login');
   };
 
+  // Only render admin layout for admin routes
+  if (!location.pathname.startsWith('/admin')) {
+    return <Outlet />;
+  }
+
   if (!user || user.role !== 'admin') {
-    navigate('/admin/login');
     return null;
   }
 

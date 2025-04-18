@@ -37,12 +37,16 @@ export const AuthProvider = ({ children }) => {
       const { token, user: userData } = response.data;
       
       localStorage.setItem('token', token);
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(userData);
       setLoading(false);
       
       return { success: true, user: userData };
     } catch (error) {
       console.error('Login error:', error);
+      localStorage.removeItem('token');
+      delete api.defaults.headers.common['Authorization'];
+      setUser(null);
       setLoading(false);
       return { 
         success: false, 
