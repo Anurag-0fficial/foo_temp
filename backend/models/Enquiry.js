@@ -4,7 +4,7 @@ const enquirySchema = new mongoose.Schema({
   productId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Product',
-    required: true
+    required: false
   },
   customerId: {
     type: mongoose.Schema.Types.ObjectId,

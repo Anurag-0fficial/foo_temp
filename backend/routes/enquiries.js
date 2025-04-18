@@ -5,7 +5,7 @@ const Customer = require('../models/Customer');
 const { auth, adminAuth } = require('../middleware/auth');
 
 // Get all enquiries (admin only)
-router.get('/',  async (req, res) => {
+router.get('/', adminAuth,async (req, res) => {
   try {
     const { status, search } = req.query;
     let query = {};
