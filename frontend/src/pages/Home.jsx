@@ -24,46 +24,81 @@ export default function Home() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative bg-white">
-        <div className="mx-auto">
-          <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:w-full lg:pb-28 xl:pb-32">
-            <main className="mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="text-left max-w-xl mx-auto lg:mx-0">
-                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                  <span className="block">Power Backup Solutions for</span>{' '}
-                  <span className="block text-blue-600">Every Need</span>
-                </h1>
-                <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-0 md:mt-5 md:text-xl">
-                  Discover our range of high-quality UPS systems, inverters, stabilizers, and batteries. Keep your power supply reliable and uninterrupted with ANG Technologies.
-                </p>
-                <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row sm:gap-3">
-                  <div className="rounded-md shadow">
-                    <Link
-                      to="/products"
-                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
-                    >
-                      View Products
-                    </Link>
+      <div className="relative bg-gradient-to-r from-blue-600 to-blue-800 overflow-hidden min-h-screen flex items-center">
+        <div className="absolute inset-0">
+          <svg
+            className="absolute right-0 inset-y-0 h-full w-48 text-white transform translate-x-1/2"
+            fill="currentColor"
+            viewBox="0 0 100 100"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <polygon points="50,0 100,0 50,100 0,100" className="text-blue-800 opacity-25" />
+          </svg>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 opacity-20 mix-blend-multiply" />
+        </div>
+        
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column */}
+            <div className="text-center lg:text-left max-w-2xl mx-auto lg:max-w-none">
+              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+                <span className="block">Power Backup Solutions</span>
+                <span className="block text-blue-200">for Every Need</span>
+              </h1>
+              <p className="mt-6 text-xl text-blue-100">
+                Discover our range of high-quality UPS systems, inverters, stabilizers, and batteries. Keep your power supply reliable and uninterrupted with ANG Technologies.
+              </p>
+              <div className="mt-10 flex flex-col sm:flex-row justify-center lg:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+                <Link
+                  to="/products"
+                  className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-white hover:bg-blue-50 md:py-4 md:text-lg md:px-10 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+                >
+                  View Products
+                </Link>
+                <Link
+                  to="/contact"
+                  className="inline-flex items-center justify-center px-8 py-3 border-2 border-white text-base font-medium rounded-md text-white hover:bg-white hover:text-blue-700 md:py-4 md:text-lg md:px-10 transition-all duration-200 transform hover:-translate-y-1 hover:shadow-lg"
+                >
+                  Contact Us
+                </Link>
+              </div>
+            </div>
+            
+            {/* Right Column */}
+            <div className="max-w-xl mx-auto lg:max-w-none">
+              <div className="relative bg-white bg-opacity-10 rounded-2xl p-8 backdrop-filter backdrop-blur-lg">
+                <div className="space-y-8">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center">
+                        <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xl font-semibold text-white">Reliable Power</p>
+                      <p className="text-blue-200 text-lg">24/7 Uninterrupted Supply</p>
+                    </div>
                   </div>
-                  <div className="mt-3 sm:mt-0">
-                    <Link
-                      to="/contact"
-                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
-                    >
-                      Contact Us
-                    </Link>
+                  <div className="flex items-center space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="h-14 w-14 rounded-full bg-blue-100 flex items-center justify-center">
+                        <svg className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-xl font-semibold text-white">Quality Assured</p>
+                      <p className="text-blue-200 text-lg">ISO Certified Products</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </main>
+            </div>
           </div>
-        </div>
-        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-          <img
-            className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-            src="/images/hero-image.jpg"
-            alt="Power backup solutions"
-          />
         </div>
       </div>
 
