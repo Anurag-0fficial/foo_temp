@@ -185,7 +185,7 @@ export default function Products() {
                   >
                     <div className="w-full aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden xl:aspect-w-7 xl:aspect-h-8">
                       <img
-                        src={product.imageUrl}
+                        src={product.images && product.images.length > 0 ? product.images[0] : '/placeholder-image.jpg'}
                         alt={product.name}
                         className="w-full h-full object-center object-cover group-hover:opacity-75"
                       />
