@@ -48,20 +48,41 @@ export default function ProductManagement() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log('Form data before submission:', formData);
+      
       const formDataToSend = new FormData();
+      
+      // First, append the image file if it exists
+      if (formData.image && formData.image instanceof File) {
+        console.log('Appending image file:', formData.image.name, formData.image.type, formData.image.size);
+        formDataToSend.append('images', formData.image);
+      } else {
+        console.log('No image file to append');
+      }
+      
+      // Then append all other fields
       Object.keys(formData).forEach((key) => {
         if (key === 'specifications') {
           formDataToSend.append(key, JSON.stringify(formData[key]));
-        } else {
+        } else if (key !== 'image') {
           formDataToSend.append(key, formData[key]);
         }
       });
+      
+      // Log the FormData contents
+      console.log('FormData contents:');
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0] + ': ' + (pair[1] instanceof File ? 'File: ' + pair[1].name : pair[1]));
+      }
 
       if (editingProduct) {
+        console.log('Updating product:', editingProduct._id);
         await api.put(`/products/${editingProduct._id}`, formDataToSend);
         toast.success('Product updated successfully');
       } else {
-        await api.post('/products', formDataToSend);
+        console.log('Creating new product');
+        const response = await api.post('/products', formDataToSend);
+        console.log('Product created successfully:', response.data);
         toast.success('Product created successfully');
       }
 
@@ -70,6 +91,7 @@ export default function ProductManagement() {
       resetForm();
       fetchProducts();
     } catch (error) {
+      console.error('Error saving product:', error);
       toast.error(error.response?.data?.message || 'Error saving product');
     }
   };
@@ -182,11 +204,11 @@ export default function ProductManagement() {
                     </div>
                   </div>
                   <div className="w-full sm:w-48">
-                    <label htmlFor="type" className="sr-only">Filter by type</label>
+                    <label htmlFor="type" className="form-label">Filter by type</label>
                     <select
                       id="type"
                       name="type"
-                      className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-primary-600 sm:text-sm sm:leading-6"
+                      className="select-field"
                       value={filterType}
                       onChange={(e) => setFilterType(e.target.value)}
                     >
@@ -329,13 +351,13 @@ export default function ProductManagement() {
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="form-label">
                         Name
                       </label>
                       <input
                         type="text"
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        className="input-field"
                         value={formData.name}
                         onChange={(e) =>
                           setFormData({ ...formData, name: e.target.value })
@@ -343,12 +365,12 @@ export default function ProductManagement() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="form-label">
                         Type
                       </label>
                       <select
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        className="select-field"
                         value={formData.type}
                         onChange={(e) =>
                           setFormData({ ...formData, type: e.target.value })
@@ -362,13 +384,13 @@ export default function ProductManagement() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="form-label">
                         Brand
                       </label>
                       <input
                         type="text"
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        className="input-field"
                         value={formData.brand}
                         onChange={(e) =>
                           setFormData({ ...formData, brand: e.target.value })
@@ -376,13 +398,13 @@ export default function ProductManagement() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="form-label">
                         kVA Rating
                       </label>
                       <input
                         type="number"
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        className="input-field"
                         value={formData.kvaRating}
                         onChange={(e) =>
                           setFormData({ ...formData, kvaRating: e.target.value })
@@ -390,13 +412,13 @@ export default function ProductManagement() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="form-label">
                         Price
                       </label>
                       <input
                         type="number"
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        className="input-field"
                         value={formData.price}
                         onChange={(e) =>
                           setFormData({ ...formData, price: e.target.value })
@@ -404,43 +426,16 @@ export default function ProductManagement() {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">
+                      <label className="form-label">
                         Stock
                       </label>
                       <input
                         type="number"
                         required
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        className="input-field"
                         value={formData.stock}
                         onChange={(e) =>
                           setFormData({ ...formData, stock: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Description
-                      </label>
-                      <textarea
-                        required
-                        rows={3}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                        value={formData.description}
-                        onChange={(e) =>
-                          setFormData({ ...formData, description: e.target.value })
-                        }
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">
-                        Image
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="mt-1 block w-full"
-                        onChange={(e) =>
-                          setFormData({ ...formData, image: e.target.files[0] })
                         }
                       />
                     </div>
@@ -449,7 +444,7 @@ export default function ProductManagement() {
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary-600 text-base font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-primary sm:w-auto"
                   >
                     {editingProduct ? 'Update' : 'Create'}
                   </button>
@@ -460,7 +455,7 @@ export default function ProductManagement() {
                       setEditingProduct(null);
                       resetForm();
                     }}
-                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="btn-secondary mt-3 sm:mt-0 sm:ml-3"
                   >
                     Cancel
                   </button>

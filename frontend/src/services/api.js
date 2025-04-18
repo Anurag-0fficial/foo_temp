@@ -16,9 +16,24 @@ api.interceptors.request.use(
       // Ensure the token is properly formatted with 'Bearer' prefix
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // If the request data is FormData, remove the Content-Type header
+    // to let the browser set it with the correct boundary
+    if (config.data instanceof FormData) {
+      console.log('Request contains FormData, removing Content-Type header');
+      delete config.headers['Content-Type'];
+      
+      // Log the FormData contents
+      console.log('FormData contents in interceptor:');
+      for (let pair of config.data.entries()) {
+        console.log('FormData entry:', pair[0] + ': ' + (pair[1] instanceof File ? 'File: ' + pair[1].name : pair[1]));
+      }
+    }
+    
     return config;
   },
   (error) => {
+    console.error('Request interceptor error:', error);
     return Promise.reject(error);
   }
 );

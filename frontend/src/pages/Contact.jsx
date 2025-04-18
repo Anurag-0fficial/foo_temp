@@ -130,84 +130,81 @@ export default function Contact() {
               Send us a message
             </h2>
             <div className="mt-9">
-              <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-y-6">
-                <div>
-                  <label htmlFor="name" className="form-label">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    id="name"
-                    required
-                    className="input-field"
-                    value={formData.name}
-                    onChange={handleChange}
-                  />
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="name" className="form-label">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      id="name"
+                      required
+                      placeholder="Your Name"
+                      className="input-field"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="email" className="form-label">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      id="email"
+                      required
+                      placeholder="Your Email"
+                      className="input-field"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label htmlFor="phone" className="form-label">Phone</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      id="phone"
+                      required
+                      placeholder="Your Phone Number"
+                      className="input-field"
+                      value={formData.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label htmlFor="subject" className="form-label">Subject</label>
+                    <input
+                      type="text"
+                      name="subject"
+                      id="subject"
+                      required
+                      placeholder="Subject of your message"
+                      className="input-field"
+                      value={formData.subject}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="sm:col-span-2">
+                    <label htmlFor="message" className="form-label">Message</label>
+                    <textarea
+                      name="message"
+                      id="message"
+                      rows={6}
+                      required
+                      placeholder="Your Message"
+                      className="textarea-field"
+                      value={formData.message}
+                      onChange={handleChange}
+                    />
+                  </div>
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="form-label">
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    id="email"
-                    required
-                    className="input-field"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="phone" className="form-label">
-                    Phone
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    id="phone"
-                    required
-                    className="input-field"
-                    value={formData.phone}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="form-label">
-                    Subject
-                  </label>
-                  <input
-                    type="text"
-                    name="subject"
-                    id="subject"
-                    required
-                    className="input-field"
-                    value={formData.subject}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="form-label">
-                    Message
-                  </label>
-                  <textarea
-                    name="message"
-                    id="message"
-                    rows={4}
-                    required
-                    className="input-field"
-                    value={formData.message}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div>
-                  <button type="submit" className="btn-primary w-full">
+                  <button type="submit" className="btn-primary">
                     Send Message
                   </button>
                 </div>

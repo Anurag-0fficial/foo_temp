@@ -24,31 +24,46 @@ export default function Home() {
   return (
     <div className="bg-white">
       {/* Hero Section */}
-      <div className="relative bg-gray-900">
-        <div className="absolute inset-0">
+      <div className="relative bg-white">
+        <div className="mx-auto">
+          <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:w-full lg:pb-28 xl:pb-32">
+            <main className="mx-auto px-4 sm:px-6 lg:px-8">
+              <div className="text-left max-w-xl mx-auto lg:mx-0">
+                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                  <span className="block">Power Backup Solutions for</span>{' '}
+                  <span className="block text-blue-600">Every Need</span>
+                </h1>
+                <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-0 md:mt-5 md:text-xl">
+                  Discover our range of high-quality UPS systems, inverters, stabilizers, and batteries. Keep your power supply reliable and uninterrupted with ANG Technologies.
+                </p>
+                <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row sm:gap-3">
+                  <div className="rounded-md shadow">
+                    <Link
+                      to="/products"
+                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 md:py-4 md:text-lg md:px-10"
+                    >
+                      View Products
+                    </Link>
+                  </div>
+                  <div className="mt-3 sm:mt-0">
+                    <Link
+                      to="/contact"
+                      className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 md:py-4 md:text-lg md:px-10"
+                    >
+                      Contact Us
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </div>
+        <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <img
-            className="w-full h-full object-cover"
-            src="/images/hero-bg.jpg"
+            className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
+            src="/images/hero-image.jpg"
             alt="Power backup solutions"
           />
-          <div className="absolute inset-0 bg-gray-900 opacity-75" />
-        </div>
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Reliable Power Solutions
-          </h1>
-          <p className="mt-6 text-xl text-gray-300 max-w-3xl">
-            Providing cutting-edge power backup solutions for businesses and homes.
-            From UPS systems to inverters, we've got you covered.
-          </p>
-          <div className="mt-10">
-            <Link
-              to="/products"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700"
-            >
-              Explore Products
-            </Link>
-          </div>
         </div>
       </div>
 

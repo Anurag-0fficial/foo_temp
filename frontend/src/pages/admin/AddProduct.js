@@ -119,7 +119,7 @@ export default function AddProduct() {
               <h2 className="text-lg font-medium text-gray-900">Basic Information</h2>
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="name" className="form-label">
                     Product Name
                   </label>
                   <input
@@ -127,21 +127,21 @@ export default function AddProduct() {
                     name="name"
                     id="name"
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.name}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="type" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="type" className="form-label">
                     Product Type
                   </label>
                   <select
                     name="type"
                     id="type"
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="select-field"
                     value={formData.type}
                     onChange={handleChange}
                   >
@@ -154,7 +154,7 @@ export default function AddProduct() {
                 </div>
 
                 <div>
-                  <label htmlFor="brand" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="brand" className="form-label">
                     Brand
                   </label>
                   <input
@@ -162,14 +162,14 @@ export default function AddProduct() {
                     name="brand"
                     id="brand"
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.brand}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="model" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="model" className="form-label">
                     Model
                   </label>
                   <input
@@ -177,7 +177,7 @@ export default function AddProduct() {
                     name="model"
                     id="model"
                     required
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.model}
                     onChange={handleChange}
                   />
@@ -190,70 +190,70 @@ export default function AddProduct() {
               <h2 className="text-lg font-medium text-gray-900">Specifications</h2>
               <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
-                  <label htmlFor="specifications.powerRating" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="specifications.powerRating" className="form-label">
                     Power Rating
                   </label>
                   <input
                     type="text"
                     name="specifications.powerRating"
                     id="specifications.powerRating"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.specifications.powerRating}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="specifications.voltage" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="specifications.voltage" className="form-label">
                     Voltage
                   </label>
                   <input
                     type="text"
                     name="specifications.voltage"
                     id="specifications.voltage"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.specifications.voltage}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="specifications.batteryCapacity" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="specifications.batteryCapacity" className="form-label">
                     Battery Capacity
                   </label>
                   <input
                     type="text"
                     name="specifications.batteryCapacity"
                     id="specifications.batteryCapacity"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.specifications.batteryCapacity}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="specifications.dimensions" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="specifications.dimensions" className="form-label">
                     Dimensions
                   </label>
                   <input
                     type="text"
                     name="specifications.dimensions"
                     id="specifications.dimensions"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.specifications.dimensions}
                     onChange={handleChange}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="specifications.weight" className="block text-sm font-medium text-gray-700">
+                  <label htmlFor="specifications.weight" className="form-label">
                     Weight
                   </label>
                   <input
                     type="text"
                     name="specifications.weight"
                     id="specifications.weight"
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                    className="input-field"
                     value={formData.specifications.weight}
                     onChange={handleChange}
                   />
@@ -263,7 +263,7 @@ export default function AddProduct() {
 
             {/* Pricing and Stock */}
             <div>
-              <label htmlFor="price" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="price" className="form-label">
                 Price
               </label>
               <div className="mt-1 relative rounded-md shadow-sm">
@@ -277,7 +277,7 @@ export default function AddProduct() {
                   required
                   min="0"
                   step="0.01"
-                  className="mt-1 block w-full pl-7 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  className="input-field"
                   value={formData.price}
                   onChange={handleChange}
                 />
@@ -285,7 +285,7 @@ export default function AddProduct() {
             </div>
 
             <div>
-              <label htmlFor="stockQuantity" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="stockQuantity" className="form-label">
                 Stock Quantity
               </label>
               <input
@@ -294,7 +294,7 @@ export default function AddProduct() {
                 id="stockQuantity"
                 required
                 min="0"
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                className="input-field"
                 value={formData.stockQuantity}
                 onChange={handleChange}
               />
@@ -302,7 +302,7 @@ export default function AddProduct() {
 
             {/* Description */}
             <div className="col-span-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="description" className="form-label">
                 Description
               </label>
               <textarea
@@ -310,7 +310,7 @@ export default function AddProduct() {
                 id="description"
                 rows={4}
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                className="textarea-field"
                 value={formData.description}
                 onChange={handleChange}
               />
@@ -318,7 +318,7 @@ export default function AddProduct() {
 
             {/* Features */}
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Features</label>
+              <label className="form-label">Features</label>
               <div className="mt-2 space-y-2">
                 {formData.features.map((feature, index) => (
                   <div key={index} className="flex gap-2">
@@ -326,13 +326,13 @@ export default function AddProduct() {
                       type="text"
                       value={feature}
                       onChange={(e) => handleFeatureChange(index, e.target.value)}
-                      className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                      className="input-field"
                       placeholder="Enter feature"
                     />
                     <button
                       type="button"
                       onClick={() => removeFeatureField(index)}
-                      className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                      className="btn-secondary"
                     >
                       Remove
                     </button>
@@ -341,7 +341,7 @@ export default function AddProduct() {
                 <button
                   type="button"
                   onClick={addFeatureField}
-                  className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                  className="btn-primary"
                 >
                   Add Feature
                 </button>
@@ -350,14 +350,25 @@ export default function AddProduct() {
 
             {/* Image Upload */}
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Product Images</label>
+              <label className="form-label">Product Images</label>
               <div className="mt-2">
+                <div className="flex items-center">
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById('product-images').click()}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                  >
+                    Choose Files
+                  </button>
+                  <span className="ml-3 text-sm text-gray-500">No file chosen</span>
+                </div>
                 <input
+                  id="product-images"
                   type="file"
                   multiple
                   accept="image/*"
                   onChange={handleImageUpload}
-                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                  className="sr-only"
                 />
               </div>
               {formData.images.length > 0 && (
@@ -394,14 +405,14 @@ export default function AddProduct() {
             <button
               type="button"
               onClick={() => navigate('/admin/products')}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="btn-secondary"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+              className="btn-primary"
             >
               {loading ? 'Adding...' : 'Add Product'}
             </button>
