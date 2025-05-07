@@ -2,26 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Product = require('../models/Product');
 const { auth, adminAuth } = require('../middleware/auth');
-const multer = require('multer');
+// Re-import upload service for handling multipart/form-data
+const { upload } = require('../services/imageService'); 
 const path = require('path');
-const fs = require('fs');
-
-// Configure multer for file upload
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    const uploadDir = path.join(__dirname, '../../uploads');
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+// No need for fs here as imageService handles directory creation
+// const fs = require('fs'); 
 
 // Get all products with filtering
 router.get('/', async (req, res) => {
@@ -59,50 +44,59 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create product (admin only)
-router.post('/', adminAuth, upload.single('images'), async (req, res) => {
+// Create product (admin only) - Add upload.array middleware
+router.post('/', adminAuth, upload.array('images', 5), async (req, res) => {
   try {
-    console.log('File upload info:', req.file);
-    console.log('Request body:', req.body);
+    // upload.array middleware populates req.files 
+    console.log('Files received:', req.files);
+    console.log('Body received:', req.body);
     
-    // If a file was uploaded, check if it exists in the uploads directory
-    if (req.file) {
-      const filePath = path.join(__dirname, '../../uploads', req.file.filename);
-      console.log('Checking if file exists at:', filePath);
-      if (fs.existsSync(filePath)) {
-        console.log('File exists at:', filePath);
-        console.log('File size:', fs.statSync(filePath).size);
-      } else {
-        console.log('File does not exist at:', filePath);
-      }
-    }
+    // Extract image URLs from req.files provided by multer
+    const images = req.files ? req.files.map(file => `/uploads/products/${file.filename}`) : [];
     
-    const productData = {
-      ...req.body,
-      category: req.body.type,
-      imageURL: req.file ? `/uploads/${req.file.filename}` : null
-    };
-
-    // Parse specifications if it's a string
-    if (typeof productData.specifications === 'string') {
+    // Parse specifications and features if they are sent as JSON strings
+    let specifications = {};
+    if (req.body.specifications && typeof req.body.specifications === 'string') {
       try {
-        productData.specifications = JSON.parse(productData.specifications);
-      } catch (error) {
-        console.error('Error parsing specifications:', error);
-        productData.specifications = {};
+        specifications = JSON.parse(req.body.specifications);
+      } catch (e) {
+        console.error("Error parsing specifications JSON:", e);
+        return res.status(400).json({ message: "Invalid specifications format" });
       }
+    } else if (typeof req.body.specifications === 'object') {
+      // Handle if already parsed (less likely with multipart/form-data but possible)
+      specifications = req.body.specifications;
+    }
+
+    let features = [];
+    if (req.body.features && typeof req.body.features === 'string') {
+      try {
+        features = JSON.parse(req.body.features);
+      } catch (e) {
+        console.error("Error parsing features JSON:", e);
+        return res.status(400).json({ message: "Invalid features format" });
+      }
+    } else if (Array.isArray(req.body.features)) {
+        features = req.body.features;
     }
 
     // Convert specifications object to Map
-    if (productData.specifications && typeof productData.specifications === 'object') {
-      const specificationsMap = new Map();
-      Object.entries(productData.specifications).forEach(([key, value]) => {
+    const specificationsMap = new Map();
+    if (specifications && typeof specifications === 'object') {
+       Object.entries(specifications).forEach(([key, value]) => {
         if (value) { // Only add non-empty values
           specificationsMap.set(key, value.toString());
         }
       });
-      productData.specifications = specificationsMap;
     }
+
+    const productData = {
+      ...req.body, // Get name, type, brand, model, description, price, stock
+      category: req.body.type, // Set category from type
+      images: images, // Add the generated image URLs
+      specifications: specificationsMap, // Use the created Map
+      features: features // Use parsed features array
+    };
     
     console.log('Product data to save:', productData);
 
@@ -113,47 +107,76 @@ router.post('/', adminAuth, upload.single('images'), async (req, res) => {
     res.status(201).json(product);
   } catch (error) {
     console.error('Error creating product:', error);
+    // Check for Mongoose validation errors
+    if (error.name === 'ValidationError') {
+        return res.status(400).json({ message: 'Validation Error', errors: error.errors });
+    }
+    // Check for Multer errors
+    if (error instanceof multer.MulterError) {
+         return res.status(400).json({ message: 'File Upload Error', error: error.message });
+    }
     res.status(500).json({ message: 'Error creating product', error: error.message });
   }
 });
 
-// Update product (admin only)
-router.put('/:id', adminAuth, upload.single('images'), async (req, res) => {
+// Update product (admin only) - Add upload.array middleware
+router.put('/:id', adminAuth, upload.array('images', 5), async (req, res) => {
   try {
+    console.log('Files received for update:', req.files);
+    console.log('Body received for update:', req.body);
+
     const productData = { 
-      ...req.body,
-      category: req.body.type // Use type as category
+      ...req.body, // Get name, type, brand, model, description, price, stock etc.
+      category: req.body.type // Set category from type
     };
-    
-    if (req.file) {
-      productData.imageURL = `/uploads/${req.file.filename}`;
+
+    // Handle new image uploads
+    if (req.files && req.files.length > 0) {
+      // If new files are uploaded, overwrite the images array
+      // We might need logic here to merge or replace existing images based on req.body instructions
+      // For now, let's assume new uploads replace old ones
+      productData.images = req.files.map(file => `/uploads/products/${file.filename}`);
+      // TODO: Optionally delete old images from storage if they are being replaced
+    } else {
+      // If no new files are uploaded, we need to check if the client wants to keep existing images
+      // The frontend might send the existing image URLs back in a field like `existingImages`
+      // or we might assume no change if `req.files` is empty. 
+      // For simplicity now, if no files uploaded, we don't update `productData.images`,
+      // relying on the client to send the full desired state or handle removal separately.
+      // Let's remove the 'images' key if no new files, to avoid accidentally clearing it with $set
+      // A better approach might involve sending existing URLs back from frontend.
+      delete productData.images; 
     }
 
-    // Parse specifications if it's a string
-    if (typeof productData.specifications === 'string') {
-      try {
-        productData.specifications = JSON.parse(productData.specifications);
-      } catch (error) {
-        console.error('Error parsing specifications:', error);
-        productData.specifications = {};
-      }
+    // Parse specifications and features (similar to POST)
+    let specifications = {};
+    if (req.body.specifications && typeof req.body.specifications === 'string') {
+        try { specifications = JSON.parse(req.body.specifications); } catch (e) { return res.status(400).json({ message: "Invalid specifications format" }); }
+    } else if (typeof req.body.specifications === 'object') {
+        specifications = req.body.specifications;
     }
+    const specificationsMap = new Map();
+    if (specifications && typeof specifications === 'object') {
+         Object.entries(specifications).forEach(([key, value]) => {
+            if (value) { specificationsMap.set(key, value.toString()); }
+        });
+    }
+    productData.specifications = specificationsMap; // Update specifications
 
-    // Convert specifications object to Map
-    if (productData.specifications && typeof productData.specifications === 'object') {
-      const specificationsMap = new Map();
-      Object.entries(productData.specifications).forEach(([key, value]) => {
-        if (value) { // Only add non-empty values
-          specificationsMap.set(key, value.toString());
-        }
-      });
-      productData.specifications = specificationsMap;
+    let features = [];
+    if (req.body.features && typeof req.body.features === 'string') {
+        try { features = JSON.parse(req.body.features); } catch (e) { return res.status(400).json({ message: "Invalid features format" }); }
+    } else if (Array.isArray(req.body.features)) {
+        features = req.body.features;
     }
+    productData.features = features; // Update features
+
+    console.log('Product data for update:', productData);
 
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      productData,
-      { new: true, runValidators: true }
+      { $set: productData }, // Use $set to update only provided fields
+      { new: true, runValidators: true, context: 'query' }
     );
 
     if (!product) {
@@ -162,6 +185,13 @@ router.put('/:id', adminAuth, upload.single('images'), async (req, res) => {
 
     res.json(product);
   } catch (error) {
+     console.error('Error updating product:', error);
+     if (error.name === 'ValidationError') {
+        return res.status(400).json({ message: 'Validation Error', errors: error.errors });
+     }
+     if (error instanceof multer.MulterError) {
+         return res.status(400).json({ message: 'File Upload Error', error: error.message });
+    }
     res.status(500).json({ message: 'Error updating product', error: error.message });
   }
 });
@@ -169,18 +199,30 @@ router.put('/:id', adminAuth, upload.single('images'), async (req, res) => {
 // Delete product (admin only)
 router.delete('/:id', adminAuth, async (req, res) => {
   try {
-    const product = await Product.findByIdAndUpdate(
-      req.params.id,
-      { isActive: false },
-      { new: true }
-    );
+    const product = await Product.findById(req.params.id);
 
     if (!product) {
       return res.status(404).json({ message: 'Product not found' });
     }
+    
+    // Delete associated images before deleting product document
+    if (product.images && product.images.length > 0) {
+      const { deleteImages } = require('../services/imageService'); // Import here or at top if preferred
+      try {
+          await deleteImages(product.images); 
+          console.log(`Deleted images for product ${product._id}`);
+      } catch (imageDeleteError) {
+          console.error(`Error deleting images for product ${product._id}:`, imageDeleteError);
+          // Decide if you want to proceed with product deletion even if images fail to delete
+      }
+    }
 
-    res.json({ message: 'Product deleted successfully' });
+    // Now perform the actual delete (hard delete)
+    await Product.findByIdAndDelete(req.params.id);
+
+    res.json({ message: 'Product and associated images deleted successfully' });
   } catch (error) {
+     console.error('Error deleting product:', error);
     res.status(500).json({ message: 'Error deleting product', error: error.message });
   }
 });

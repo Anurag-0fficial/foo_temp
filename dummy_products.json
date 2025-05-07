@@ -1,0 +1,119 @@
+{
+  "products": [
+    {
+      "name": "PowerPro 1000VA UPS",
+      "type": "UPS",
+      "brand": "PowerPro",
+      "model": "PP-1000VA",
+      "description": "A reliable 1000VA UPS system with pure sine wave output, perfect for home and small office use. Features automatic voltage regulation and surge protection.",
+      "specifications": {
+        "powerRating": "1000VA/600W",
+        "voltage": "230V",
+        "batteryCapacity": "12V/7Ah",
+        "dimensions": "300x150x200mm",
+        "weight": "8.5kg"
+      },
+      "price": 8999,
+      "stock": 15,
+      "features": [
+        "Pure sine wave output",
+        "Automatic voltage regulation",
+        "Surge protection",
+        "LCD display",
+        "USB connectivity"
+      ]
+    },
+    {
+      "name": "EcoPower 2000VA Inverter",
+      "type": "Inverter",
+      "brand": "EcoPower",
+      "model": "EP-2000VA",
+      "description": "High-efficiency 2000VA inverter with advanced battery management system. Ideal for medium-sized homes and offices.",
+      "specifications": {
+        "powerRating": "2000VA/1600W",
+        "voltage": "230V",
+        "batteryCapacity": "12V/100Ah",
+        "dimensions": "400x200x250mm",
+        "weight": "12kg"
+      },
+      "price": 15999,
+      "stock": 8,
+      "features": [
+        "High-efficiency design",
+        "Advanced battery management",
+        "Overload protection",
+        "Low battery alarm",
+        "Remote monitoring"
+      ]
+    },
+    {
+      "name": "SolarMax 5KVA Hybrid Inverter",
+      "type": "Hybrid Inverter",
+      "brand": "SolarMax",
+      "model": "SM-5KVA",
+      "description": "Advanced 5KVA hybrid inverter with solar charging capability. Perfect for homes and businesses looking to reduce electricity costs.",
+      "specifications": {
+        "powerRating": "5000VA/4000W",
+        "voltage": "230V",
+        "batteryCapacity": "48V/200Ah",
+        "dimensions": "500x300x300mm",
+        "weight": "25kg"
+      },
+      "price": 45999,
+      "stock": 5,
+      "features": [
+        "Solar charging capability",
+        "Grid-tie functionality",
+        "Smart load management",
+        "WiFi monitoring",
+        "MPPT solar charger"
+      ]
+    },
+    {
+      "name": "PowerGuard 10KVA Online UPS",
+      "type": "Online UPS",
+      "brand": "PowerGuard",
+      "model": "PG-10KVA",
+      "description": "Professional-grade 10KVA online UPS with zero transfer time. Designed for critical applications and data centers.",
+      "specifications": {
+        "powerRating": "10000VA/8000W",
+        "voltage": "400V",
+        "batteryCapacity": "192V/100Ah",
+        "dimensions": "600x400x400mm",
+        "weight": "45kg"
+      },
+      "price": 89999,
+      "stock": 3,
+      "features": [
+        "Zero transfer time",
+        "Double conversion technology",
+        "Hot-swappable batteries",
+        "SNMP monitoring",
+        "Redundant power modules"
+      ]
+    },
+    {
+      "name": "EcoFlow 3KVA Solar Inverter",
+      "type": "Solar Inverter",
+      "brand": "EcoFlow",
+      "model": "EF-3KVA",
+      "description": "Efficient 3KVA solar inverter with built-in MPPT controller. Perfect for residential solar installations.",
+      "specifications": {
+        "powerRating": "3000VA/2400W",
+        "voltage": "230V",
+        "batteryCapacity": "48V/150Ah",
+        "dimensions": "450x250x300mm",
+        "weight": "18kg"
+      },
+      "price": 32999,
+      "stock": 10,
+      "features": [
+        "Built-in MPPT controller",
+        "Grid-tie capability",
+        "Battery backup",
+        "LCD display",
+        "Mobile app monitoring"
+      ]
+    }
+  ]
+} 
