@@ -27,7 +27,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ang-techn
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
-// app.use('/api/enquiries', require('./routes/enquiries')); // Commented out - file missing
+app.use('/api/enquiries', require('./routes/enquiries')); // Commented out - file missing
 app.use('/api/customers', require('./routes/customers'));
 // app.use('/api/upload', require('./routes/upload')); // Commented out - no longer needed
 
