@@ -16,7 +16,7 @@ export default function EnquiryManagement() {
 
   const fetchEnquiries = async () => {
     try {
-      const response = await axios.get('/api/enquiries');
+      const response = await axios.get('http://localhost:5000/api/enquiries');
       setEnquiries(response.data);
     } catch (error) {
       console.error('Error fetching enquiries:', error);
@@ -28,7 +28,7 @@ export default function EnquiryManagement() {
 
   const handleStatusChange = async (enquiryId, newStatus) => {
     try {
-      await axios.put(`/api/enquiries/${enquiryId}`, { status: newStatus });
+      await axios.put(`http://localhost:5000/api/enquiries/${enquiryId}`, { status: newStatus });
       setEnquiries(prevEnquiries =>
         prevEnquiries.map(enquiry =>
           enquiry._id === enquiryId ? { ...enquiry, status: newStatus } : enquiry
@@ -46,7 +46,7 @@ export default function EnquiryManagement() {
     if (!note.trim()) return;
 
     try {
-      await axios.post(`/api/enquiries/${selectedEnquiry._id}/notes`, { content: note });
+      await axios.post(`http://localhost:5000/api/enquiries/${selectedEnquiry._id}/notes`, { content: note });
       setEnquiries(prevEnquiries =>
         prevEnquiries.map(enquiry =>
           enquiry._id === selectedEnquiry._id

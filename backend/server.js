@@ -16,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Serve static files from the uploads directory
+// The '/uploads' URL path will map to the './uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Database connection
@@ -26,9 +27,9 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ang-techn
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/products', require('./routes/products'));
-app.use('/api/enquiries', require('./routes/enquiries'));
+app.use('/api/enquiries', require('./routes/enquiries')); // Commented out - file missing
 app.use('/api/customers', require('./routes/customers'));
-app.use('/api/upload', require('./routes/upload'));
+// app.use('/api/upload', require('./routes/upload')); // Commented out - no longer needed
 
 // Error handling middleware
 app.use(errorHandler);

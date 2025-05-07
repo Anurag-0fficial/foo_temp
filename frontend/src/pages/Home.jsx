@@ -140,7 +140,7 @@ export default function Home() {
                   </h3>
                   <p className="mt-2 text-sm text-gray-500">{product.brand}</p>
                   <p className="mt-1 text-lg font-medium text-gray-900">
-                    ${product.price}
+                    ₹{product.price}
                   </p>
                 </div>
               </div>

@@ -6,6 +6,11 @@ import { toast } from 'react-toastify';
 export default function AddProduct() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  // Store File objects for images, not URLs
+  const [imageFiles, setImageFiles] = useState([]); 
+  // Store preview URLs generated locally
+  const [imagePreviews, setImagePreviews] = useState([]); 
+
   const [formData, setFormData] = useState({
     name: '',
     type: '',
@@ -20,9 +25,10 @@ export default function AddProduct() {
       weight: ''
     },
     price: '',
-    stockQuantity: '',
+    // Renamed from stockQuantity to match backend model 'stock'
+    stock: '', 
     features: [''],
-    images: []
+    // 'images' field is removed from here as it's handled by imageFiles state
   });
 
   const handleChange = (e) => {
@@ -67,40 +73,72 @@ export default function AddProduct() {
     }));
   };
 
-  const handleImageUpload = async (e) => {
+  // Handle file selection, store files and create previews
+  const handleFileSelect = (e) => {
     const files = Array.from(e.target.files);
-    const formData = new FormData();
-    files.forEach(file => {
-      formData.append('images', file);
-    });
-
-    try {
-      const response = await api.post('/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      });
-      setFormData(prev => ({
-        ...prev,
-        images: [...prev.images, ...response.data.urls]
-      }));
-      toast.success('Images uploaded successfully');
-    } catch (error) {
-      console.error('Error uploading images:', error);
-      toast.error('Failed to upload images');
-    }
+    const newFiles = [...imageFiles, ...files].slice(0, 5); // Limit to 5 images total
+    const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+    
+    setImageFiles(newFiles);
+    setImagePreviews(newPreviews);
   };
+
+  // Remove selected image file and its preview
+  const removeImage = (index) => {
+    const updatedFiles = imageFiles.filter((_, i) => i !== index);
+    const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
+    
+    // Clean up blob URL
+    URL.revokeObjectURL(imagePreviews[index]); 
+    
+    setImageFiles(updatedFiles);
+    setImagePreviews(updatedPreviews);
+  };
+
+  // Clean up preview URLs on component unmount
+  React.useEffect(() => {
+    return () => {
+      imagePreviews.forEach(url => URL.revokeObjectURL(url));
+    };
+  }, [imagePreviews]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await api.post('/products', formData);
+      const formDataToSend = new FormData();
+      
+      // Append all regular form fields
+      Object.keys(formData).forEach(key => {
+        if (key === 'specifications') {
+          // Send specifications as a JSON string
+          formDataToSend.append(key, JSON.stringify(formData[key])); 
+        } else if (key === 'features') {
+          // Send features as a JSON string
+          formDataToSend.append(key, JSON.stringify(formData.features.filter(f => f.trim() !== ''))); // Filter empty features
+        } else {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+
+      // Append image files directly
+      imageFiles.forEach(file => {
+        formDataToSend.append('images', file); // Use 'images' key for multer backend
+      });
+
+      // Single API call to create product with images
+      await api.post('/api/products', formDataToSend, {
+        // Remove explicit headers - browser will set Content-Type correctly for FormData
+        // headers: {
+        //   'Content-Type': 'multipart/form-data', 
+        // },
+      });
+
       toast.success('Product added successfully');
       navigate('/admin/products');
     } catch (error) {
-      console.error('Error adding product:', error);
+      console.error('Error adding product:', error.response || error);
       toast.error(error.response?.data?.message || 'Failed to add product');
     } finally {
       setLoading(false);
@@ -285,17 +323,17 @@ export default function AddProduct() {
             </div>
 
             <div>
-              <label htmlFor="stockQuantity" className="form-label">
+              <label htmlFor="stock" className="form-label">
                 Stock Quantity
               </label>
               <input
                 type="number"
-                name="stockQuantity"
-                id="stockQuantity"
+                name="stock"
+                id="stock"
                 required
                 min="0"
                 className="input-field"
-                value={formData.stockQuantity}
+                value={formData.stock}
                 onChange={handleChange}
               />
             </div>
@@ -348,49 +386,46 @@ export default function AddProduct() {
               </div>
             </div>
 
-            {/* Image Upload */}
+            {/* Image Upload Section - Updated */}
             <div className="col-span-2">
-              <label className="form-label">Product Images</label>
+              <label className="form-label">Product Images (Max 5)</label>
               <div className="mt-2">
                 <div className="flex items-center">
-                  <button
-                    type="button"
-                    onClick={() => document.getElementById('product-images').click()}
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
-                  >
-                    Choose Files
-                  </button>
-                  <span className="ml-3 text-sm text-gray-500">No file chosen</span>
-                </div>
-                <input
-                  id="product-images"
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="sr-only"
-                />
+                  <input
+                    id="product-images"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                    disabled={imageFiles.length >= 5}
+                  />
+                   <label 
+                     htmlFor="product-images"
+                     className={`inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 ${imageFiles.length >= 5 ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                   >
+                    Choose Files ({imageFiles.length}/5)
+                   </label>
+                 </div>
               </div>
-              {formData.images.length > 0 && (
+              {imagePreviews.length > 0 && (
                 <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                  {formData.images.map((url, index) => (
+                  {imagePreviews.map((url, index) => (
                     <div key={index} className="relative">
                       <img
                         src={url}
-                        alt={`Product ${index + 1}`}
+                        alt={`Product Preview ${index + 1}`}
                         className="h-24 w-24 object-cover rounded-lg"
+                        onLoad={() => console.log(`Preview ${index+1} loaded`)}
+                        onError={() => console.error(`Preview ${index+1} failed to load`)}
                       />
                       <button
                         type="button"
-                        onClick={() => {
-                          setFormData(prev => ({
-                            ...prev,
-                            images: prev.images.filter((_, i) => i !== index)
-                          }));
-                        }}
-                        className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-100 rounded-full p-1"
+                        onClick={() => removeImage(index)}
+                        className="absolute top-0 right-0 -mt-2 -mr-2 bg-red-100 rounded-full p-1 text-red-600 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                        aria-label="Remove image"
                       >
-                        <svg className="h-4 w-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                         </svg>
                       </button>
